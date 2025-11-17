@@ -1,3 +1,6 @@
+> Note: Somehow the GitHub markdown reader does not render equations properly, this is best read on a local reader such
+> as the Pycharm/VSCode Markdown plugin
+
 
 ## Functional Programming?
 
@@ -419,6 +422,3 @@ $$
 \ieq=\lambda~n~m, \band~(\ileq~n~m)~(\ileq~m~n).
 $$
 Make sure you understand why these three operators work and verify that they are correct.
-
-# List
-
