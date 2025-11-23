@@ -1,6 +1,6 @@
 from church_encodings.bool import b_true, b_false
 
-p_pair = ...
+p_pair = lambda x, y: lambda b: b(x, y)
 
-p_first = ...
-p_second = ...
+p_first = lambda p: p(b_true)
+p_second = lambda p: p(b_false)

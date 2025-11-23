@@ -1,6 +1,6 @@
 from pytest import mark
 
-from church_encodings import (
+from church_encodings.int import (
     i_zero,
     i_succ,
     i_pred,
@@ -11,13 +11,8 @@ from church_encodings import (
     i_leq,
     i_lt,
     i_eq,
-    i_div,
-    i_mod,
-    i_gcd,
-    from_bool,
-    from_int,
-    to_int
 )
+from church_encodings.equivalences import from_bool, from_int, to_int
 
 f = lambda x: x + 1
 x = 0

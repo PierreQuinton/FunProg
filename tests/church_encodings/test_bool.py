@@ -1,6 +1,7 @@
 from pytest import mark
 
-from church_encodings import b_true, b_false, b_not, b_or, b_and, from_bool
+from church_encodings.bool import b_true, b_false, b_not, b_or, b_and
+from church_encodings.equivalences import from_bool
 
 
 @mark.parametrize("x", [2, "yep", [3, 4, 6]])

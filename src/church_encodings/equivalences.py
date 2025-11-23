@@ -1,21 +1,24 @@
-from church_encodings import b_false, b_true, i_zero, i_succ, l_nil, p_pair, p_first, p_second, \
-    l_cons
+from church_encodings.bool import b_false, b_true
+from church_encodings.pair import p_pair, p_first, p_second
+from church_encodings.int import  i_zero, i_succ
+from church_encodings.list import l_nil, l_cons
 
 
 def from_bool(b):
-    ...
+    return b_true if b else b_false
 
 
 def to_bool(b):
-    ...
+    return b(True, False)
 
 
 def from_pair(p):
-    ...
+    x, y = p
+    return p_pair(x, y)
 
 
 def to_pair(p):
-    ...
+    return (p_first(p), p_second(p))
 
 
 def from_int(n):
