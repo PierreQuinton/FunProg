@@ -174,14 +174,13 @@ answer is anything a computer (or, more formally, a Turing machine) can do.
 
 In the previous section, we cheated a little by assuming that numbers and other basic types existed. But in pure lambda
 calculus, we can't assume anything. We have to build everything from scratch. So, let's begin by defining some of the
-built-in types you're familiar with in Python.
+buoperatorname{lt}-in types you're familiar with in Python.
 
 This brings us to the second main takeaway from this course: in functional programming, types are defined by their
 roles. To illustrate this principle, let's start with Booleans.
 
 ### Boolean
 
-$\newcommand{btrue}{true}\newcommand{bfalse}{false}\newcommand{bor}{or}\newcommand{band}{and}\newcommand{bnot}{not}$
 The primary purpose of a Boolean is to act as a switch, typically seen in `if`/`else` statements such as
 the following:
 ```python
@@ -193,86 +192,84 @@ else:
 This code snippet shows that a Boolean's role is to select between one of two values or actions. For this reason, we can
 represent a Boolean as a function that chooses between its two arguments.
 
-We define $\btrue$ and $\bfalse$ as follows:
+We define $\operatorname{true}$ and $\operatorname{false}$ as follows:
 $$\begin{align*}
-\btrue &= \lambda~x~y, x\\
-\bfalse &= \lambda~x~y, y
+\operatorname{true} &= \lambda~x~y, x\\
+\operatorname{false} &= \lambda~x~y, y
 \end{align*}$$
-With these definitions, $\btrue$ is a function that always returns the first value it's given, while $\bfalse$ always
+With these definitions, $\operatorname{true}$ is a function that always returns the first value it's given, while $\operatorname{false}$ always
 returns the second. This allows the Python code to be translated into the elegant and simple lambda calculus expression:
 $$
 z = b~x~y
 $$
 
 Of course, Booleans are only useful if we can combine them with logical operations like `or`, `and` and `not`.
-We can easily implement $\bnot$ as
+We can easily implement $\operatorname{not}$ as
 $$
-\bnot = \lambda~b, b~\bfalse~\btrue
+\operatorname{not} = \lambda~b, b~\operatorname{false}~\operatorname{true}
 $$
-If $b$ is $\btrue$, this evaluates to $\bfalse$, and if $b$ is $\bfalse$, it evaluates to $\btrue$, just as we would
+If $b$ is $\operatorname{true}$, this evaluates to $\operatorname{false}$, and if $b$ is $\operatorname{false}$, it evaluates to $\operatorname{true}$, just as we would
 expect.
 
 Take a moment to reflect on the simplicity and elegance of this idea. All of this power and grace comes from one
 fundamental concept: treating functions as first-class values.
 
-Let's now move on to the $\bor$ operator. It takes two Booleans $b_1$ and $b_2$, and returns $\btrue$ if either one is
-$\btrue$, and $\bfalse$ otherwise. We can rephrase this logic in a way that's perfect for a functional definition: If
-$b_1$ is $\btrue$, return $\btrue$, otherwise return $b_2$.
+Let's now move on to the $\operatorname{or}$ operator. It takes two Booleans $b_1$ and $b_2$, and returns $\operatorname{true}$ if either one is
+$\operatorname{true}$, and $\operatorname{false}$ otherwise. We can rephrase this logic in a way that's perfect for a functional definition: If
+$b_1$ is $\operatorname{true}$, return $\operatorname{true}$, otherwise return $b_2$.
 
-Since our Booleans act as selectors, where $\btrue$ selects the first argument and $\bfalse$ selects the second, we can
+Since our Booleans act as selectors, where $\operatorname{true}$ selects the first argument and $\operatorname{false}$ selects the second, we can
 implement this logic by calling $b_1$ with the appropriate arguments. 
-This yields the following elegant definition for $\bor$:
+This yields the following elegant definition for $\operatorname{or}$:
 $$
-\bor = \lambda~b_1~b_2, b_1~\btrue~b_2
+\operatorname{or} = \lambda~b_1~b_2, b_1~\operatorname{true}~b_2
 $$
 Take a moment to truly understand this definition. To fully grasp the logic, try evaluating this expression by
-substituting $\btrue$ and $\bfalse$ for $b_1$ and $b_2$ in all four possible combinations. This exercise will help you
+substituting $\operatorname{true}$ and $\operatorname{false}$ for $b_1$ and $b_2$ in all four possible combinations. This exercise will help you
 see how the simple act of function application performs the exact logical operation you expect.
 
-Let's define the final logical operator, $\band$. This operator takes two Booleans, $b_1$ and $b_2$, and returns
-$\btrue$ only if both are $\btrue$, and $\bfalse$ otherwise. We can rephrase this logic using our functional approach:
-If $b_1$ is $\btrue$, the result should be $b_2$. Otherwise, the result should be $\bfalse$.
+Let's define the final logical operator, $\operatorname{and}$. This operator takes two Booleans, $b_1$ and $b_2$, and returns
+$\operatorname{true}$ only if both are $\operatorname{true}$, and $\operatorname{false}$ otherwise. We can rephrase this logic using our functional approach:
+If $b_1$ is $\operatorname{true}$, the result should be $b_2$. Otherwise, the result should be $\operatorname{false}$.
 
-This leads to the following elegant definition for $\band$:
+This leads to the following elegant definition for $\operatorname{and}$:
 $$
-\band = \lambda~b_2~b_2, b_1~b_2~\bfalse
+\operatorname{and} = \lambda~b_2~b_2, b_1~b_2~\operatorname{false}
 $$
-Notice how this definition perfectly mirrors the logic. If $b_1$ is $\btrue$, it will select its first argument, which
-is $b_2$. If $b_1$ is $\bfalse$, it will select its second argument, which is $\bfalse$, giving us the correct result in
+Notice how this definition perfectly mirrors the logic. If $b_1$ is $\operatorname{true}$, it will select its first argument, which
+is $b_2$. If $b_1$ is $\operatorname{false}$, it will select its second argument, which is $\operatorname{false}$, giving us the correct result in
 both cases. Take a moment to trace the evaluation with different combinations of inputs for $b_1$ and $b_2$ to see this
 in action.
 
 ### Pair
-$\newcommand{ppair}{pair}\newcommand{pfirst}{first}\newcommand{psecond}{second}$
 Next, we'll define a pair of values. This is a foundational step, as more complex data structures like tuples can be
-built by nesting pairs (a tuple of three elements is just a pair of a value and another pair).
+buoperatorname{lt} by nesting pairs (a tuple of three elements is just a pair of a value and another pair).
 
 A pair's core role is to contain two values and provide a way to access each of them. With this role in mind, we can
 view a pair as a function that maps an index to a value. And what better index to use than our newly defined Booleans?
-We can define a pair as a function that maps $\btrue$ to the first value and $\bfalse$ to the second.
+We can define a pair as a function that maps $\operatorname{true}$ to the first value and $\operatorname{false}$ to the second.
 
-With this, we can now define a suitable constructor for pairs, a function we'll call $\ppair$. It takes two values and
+With this, we can now define a suitable constructor for pairs, a function we'll call $\operatorname{pair}$. It takes two values and
 returns a function that acts as their pair.
 
 Formally:
 $$
-\ppair = \lambda~x~y, \lambda~b, b~x~y.
+\operatorname{pair} = \lambda~x~y, \lambda~b, b~x~y.
 $$
 
 We can also define getters to retrieve the values from a pair, functions that map a pair to either its first or second
 element:
 $$\begin{align*}
-\pfirst &= \lambda~p, \btrue~p\\
-\psecond &= \lambda~p, \bfalse~p
+\operatorname{first} &= \lambda~p, \operatorname{true}~p\\
+\operatorname{second} &= \lambda~p, \operatorname{false}~p
 \end{align*}$$
-Notice that since our pair is a function that takes a Boolean as input, all we have to do is apply the pair to $\btrue$
-or $\bfalse$ to retrieve the corresponding element.
+Notice that since our pair is a function that takes a Boolean as input, all we have to do is apply the pair to $\operatorname{true}$
+or $\operatorname{false}$ to retrieve the corresponding element.
 
-As an exercise, you should verify that $\pfirst~(\ppair~x~y)$ evaluates to $x$ while $\psecond~(\ppair~x~y)$ evaluates
+As an exercise, you should verify that $\operatorname{first}~(\operatorname{pair}~x~y)$ evaluates to $x$ while $\operatorname{second}~(\operatorname{pair}~x~y)$ evaluates
 to $u$.
 
 ### Integer
-$\newcommand{izero}{zero}\newcommand{isucc}{succ}\newcommand{ipred}{pred}\newcommand{iadd}{add}\newcommand{isub}{sub}\newcommand{imul}{mul}\newcommand{idiv}{div}\newcommand{imod}{mod}\newcommand{ileq}{leq}\newcommand{ilt}{lt}\newcommand{ieq}{eq}\newcommand{iiszero}{isZero}$
 The most common use of an integer is to perform an action a certain number of times, as seen in a `for` loop. For
 example, in the following Python code, the number `n` dictates how many times we add `1` to `sum`:
 
@@ -300,11 +297,11 @@ next integer). For instance, the number $2$ is the successor of the successor of
 
 This leads to the following elegant definitions in lambda calculus, often called Church numerals:
 $$\begin{align*}
-\izero &= \lambda~f~x, x\\
-\isucc &= \lambda~n, \lambda~f~x, f~(n~f~x)
+\operatorname{zero} &= \lambda~f~x, x\\
+\operatorname{succ} &= \lambda~n, \lambda~f~x, f~(n~f~x)
 \end{align*}$$
 
-As an exercise, verify that if $\text{two}=\isucc~(\isucc~\izero)$, it represents a function that maps $f$ and $x$ to
+As an exercise, verify that if $\text{two}=\operatorname{succ}~(\operatorname{succ}~\operatorname{zero})$, it represents a function that maps $f$ and $x$ to
 $f\big(f(x)\big)$, and convince yourself that this logic should extend to any integer.
 
 Now that we have our building blocks, let's see how we can perform operations on them. Let's start with a simple one:
@@ -312,27 +309,27 @@ adding two numbers.
 
 We can define addition by thinking about what it really means. For example, to get $5$ from $2+3$, we can apply the
 successor function three times, starting from $2$. In our lambda calculus world, three is a function that applies
-another function $f$ three times to some initial value $x$. So, if we choose $f$ to be the successor function $\isucc$
+another function $f$ three times to some initial value $x$. So, if we choose $f$ to be the successor function $\operatorname{succ}$
 and $x$ to be the number two, we get:
 $$
-\text{five} = \text{three}~\isucc~\text{two}
+\text{five} = \text{three}~\operatorname{succ}~\text{two}
 $$
 Generalizing this, we can define addition as a function that takes two numbers, $n$ and $m$, and applies the successor
 function $m$ times to $n$. This leads to the following elegant definition:
 $$
-\iadd = \lambda~n~m, m~\isucc~n.
+\operatorname{add} = \lambda~n~m, m~\operatorname{succ}~n.
 $$
-Take a moment to convince yourself why this is correct. If you apply $\iadd$ to two and three, the number three will
-take $\isucc$ and two as its arguments, applying $\isucc$ three times to two, which correctly gives us five.
+Take a moment to convince yourself why this is correct. If you apply $\operatorname{add}$ to two and three, the number three will
+take $\operatorname{succ}$ and two as its arguments, applying $\operatorname{succ}$ three times to two, which correctly gives us five.
 
 The integers we've defined are non-negative. While it's possible to extend these concepts to include negative numbers,
 we won't go into that here. However, we can still define subtraction, as long as the result is not negative.
 
-Just as we used $\isucc$ to define the operation of adding one, we can define a predecessor function, $\ipred$, that
+Just as we used $\operatorname{succ}$ to define the operation of adding one, we can define a predecessor function, $\operatorname{pred}$, that
 decreases a number by one. This will be valid for any number greater than or equal to one. For practicality, we'll
 define $0-1$ to be equal to $0$.
 
-It might not be immediately obvious how to create this $\ipred$ function using only our successor function. One way to
+It might not be immediately obvious how to create this $\operatorname{pred}$ function using only our successor function. One way to
 approach it is to think about it with a for loop that keeps track of both the current value and the preceding one. In
 Python, this would look something like this:
 ```python
@@ -355,22 +352,22 @@ is to define a function that:
 - Starts with an initial pair of `(0, 0)`.
 - After iterating, takes the second element of the final pair (which corresponds to the `preceding` value we want).
 
-This leads to the following formal definition for $\ipred$:
+This leads to the following formal definition for $\operatorname{pred}$:
 $$\begin{align*}
-\phi &= \lambda~p, \ppair~\big(\isucc~(\pfirst~p)\big)~(\pfirst~p)\\
-\ipred &= \lambda~n, \psecond~\big(n~\phi~(\ppair~\izero~\izero)\big)
+\phi &= \lambda~p, \operatorname{pair}~\big(\operatorname{succ}~(\operatorname{first}~p)\big)~(\operatorname{first}~p)\\
+\operatorname{pred} &= \lambda~n, \operatorname{second}~\big(n~\phi~(\operatorname{pair}~\operatorname{zero}~\operatorname{zero})\big)
 \end{align*}$$
 Take a moment to carefully trace the logic here. The variable $n$ is used to apply $\phi$ a total of $n$ times to the
-initial pair $(\izero, \izero)$. After all the applications, $\psecond$ retrieves the final preceding value, giving us
+initial pair $(\operatorname{zero}, \operatorname{zero})$. After all the applications, $\operatorname{second}$ retrieves the final preceding value, giving us
 our desired result.
 
-Now that we have defined $\ipred$, it becomes very easy to define substraction. Recall that addition was implemented by
+Now that we have defined $\operatorname{pred}$, it becomes very easy to define substraction. Recall that addition was implemented by
 apply the successor function an appropriate number of times to a provided number. Similarly, subtraction can be defined
 by apply the predecessor function several time to a number. Specifically
 $$
-\isub = \lambda~n~m, m~\ipred~n.
+\operatorname{sub} = \lambda~n~m, m~\operatorname{pred}~n.
 $$
-Make sure you understand that applying $m$ times $\ipred$ to $n$ indeed yields $m-n$. Also note that if $n$ is larger
+Make sure you understand that applying $m$ times $\operatorname{pred}$ to $n$ indeed yields $m-n$. Also note that if $n$ is larger
 than $m$, we get $0$.
 
 Multiplication is also quite simple. When computing $n\times m$, we are basically adding $n$ to $0$, $m$ times:
@@ -379,9 +376,9 @@ n\times m = n+\dots+n+0
 \end{align*}$$
 In lambda calculus, this translates directly to
 $$
-\imul = \lambda~n~m, m~(\lambda~k, \iadd~n~k)~\izero.
+\operatorname{mul} = \lambda~n~m, m~(\lambda~k, \operatorname{add}~n~k)~\operatorname{zero}.
 $$
-Make sure you understand this expression. Note that $\lambda~k, \iadd~n~k$ is a function that takes an integer $k$ and
+Make sure you understand this expression. Note that $\lambda~k, \operatorname{add}~n~k$ is a function that takes an integer $k$ and
 outputs $k+n$, i.e., it is the "add $n$" function. If we apply this function $m$ times to $0$, we are adding $m\times n$
 to $0$, which is indeed $m\times n$.
 
@@ -389,10 +386,10 @@ Now it becomes truely interesting. We will implement some relations on the integ
 operations take as input two integers and output a Boolean. But we have defined Booleans so we can make them output one
 of our homemade Booleans.
 
-Let us start slow by implementing a function that tests if an integer is $\izero$. As our numbers are defined by the
-number of times they apply a function to an initial value, we want our function to yield $\btrue$ if and only if the
-function is applied $0$ times, and $\bfalse$ otherwise. So the function we apply should always return $\bfalse$ and the
-initial value should be $\btrue$. In Python this code would look something like this:
+Let us start slow by implementing a function that tests if an integer is $\operatorname{zero}$. As our numbers are defined by the
+number of times they apply a function to an initial value, we want our function to yield $\operatorname{true}$ if and only if the
+function is applied $0$ times, and $\operatorname{false}$ otherwise. So the function we apply should always return $\operatorname{false}$ and the
+initial value should be $\operatorname{true}$. In Python this code would look something like this:
 ```python
 def is_zero(n):
     result = True
@@ -402,23 +399,23 @@ def is_zero(n):
 ```
 And this indeed returns `True` if and only if `n == 0`. In lambda calculus, we can write this as
 $$
-\iiszero=\lambda~n,n~(\lambda~x,\bfalse)~\btrue.
+\operatorname{isZero}=\lambda~n,n~(\lambda~x,\operatorname{false})~\operatorname{true}.
 $$
 Make sure to verify that this is indeed a translation of the above python code in lambda calculus.
 
 This operator will enable us to define comparison operators such as $\leq$, $<$ and $=$. Recall that when we computed
-$\isub~n~m$, we would get $\izero$ whenever $n\leq m$. So by combining $\isub$ and $\iiszero$, we can implement the
+$\operatorname{sub}~n~m$, we would get $\operatorname{zero}$ whenever $n\leq m$. So by combining $\operatorname{sub}$ and $\operatorname{isZero}$, we can implement the
 operator $\leq$ to compare elements:
 $$
-\ileq=\lambda~n~m, \iiszero~(\isub~n~m).
+\operatorname{leg}=\lambda~n~m, \operatorname{isZero}~(\operatorname{sub}~n~m).
 $$
 Also note that in python `n < m` is always equal to `not (m <= n)`, so we can implement the `<` operator as
 $$
-\ilt=\lambda~n~m, \bnot~(\ileq~m~n).
+\operatorname{lt}=\lambda~n~m, \operatorname{not}~(\operatorname{leg}~m~n).
 $$
 Last but not least, we also have `n == m` if and only if both `n <= m` and `m <= n` hold, so we can implement the `==`
 operator as
 $$
-\ieq=\lambda~n~m, \band~(\ileq~n~m)~(\ileq~m~n).
+\operatorname{eq}=\lambda~n~m, \operatorname{and}~(\operatorname{leg}~n~m)~(\operatorname{leg}~m~n).
 $$
 Make sure you understand why these three operators work and verify that they are correct.
