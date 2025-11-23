@@ -122,6 +122,7 @@ $$
 $$
 <!--endmath-->
 Evaluating this will yield the following steps (we change the name of some variable $x$ to make it more readable)
+<!--math-->
 $$\begin{align*}
 & \big(\lambda\hspace{0.4em}f, \lambda\hspace{0.4em}x, f\hspace{0.4em}(f\hspace{0.4em}x)\big)\hspace{0.4em}(\lambda\hspace{0.4em}x, x^2)\hspace{0.4em}2\\
 \to\hspace{0.4em}& \bigg(\lambda\hspace{0.4em}x, \Big((\lambda\hspace{0.4em}y, y^2)\hspace{0.4em}\big((\lambda\hspace{0.4em}z, z^2)\hspace{0.4em}x\big)\Big)\bigg)\hspace{0.4em}2&&
@@ -132,8 +133,9 @@ $$\begin{align*}
 \big(\text{replace $z$ with $2$}\big)\\
 \to\hspace{0.4em}& 16&&
 \big(\text{replace $y$ with $4$}\big)\\
-\end{align*}<!--math-->
+\end{align*}
 $$
+<!--endmath-->
 
 In Python, this translates to a very similar structure
 ```python
