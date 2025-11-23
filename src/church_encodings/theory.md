@@ -49,9 +49,11 @@ f(-7)                  # 49
 ```
 
 Similarly, in lambda calculus, the expression
+<!--math-->
 $$
 \lambda\hspace{0.4em}x, x^2
 $$
+<!--endmath-->
 represents the function mapping some $x$ to its square $x^2$.
 
 In lambda calculus, applying a function $f$ to a value $x$ is written as $f\hspace{0.4em}x$, omitting the parentheses typically used
@@ -61,9 +63,11 @@ represents applying $f$ to the result of applying $g$ to $x$. It's important to 
 $g\hspace{0.4em}f\hspace{0.4em}x$, which is the same as $(g\hspace{0.4em}f)\hspace{0.4em}x$.
 
 Since $\lambda\hspace{0.4em}x, x^2$ is a function, we can apply it to a value. For instance
+<!--math-->
 $$
 (\lambda\hspace{0.4em}x, x^2)\hspace{0.4em}2
 $$
+<!--endmath-->
 evaluates to $4$.
 In python this can be directly translated to
 ```python
@@ -72,9 +76,11 @@ In python this can be directly translated to
 
 What if we want to apply the same function to several inputs without redefining it every time? We can assign it a
 name by defining a lambda expression that binds the function to a variable. For example, consider the expression:
+<!--math-->
 $$
 \big(\lambda\hspace{0.4em}f, f\hspace{0.4em}(f\hspace{0.4em}3)\big)(\lambda\hspace{0.4em}x, x^2)
 $$
+<!--endmath-->
 evaluates to $81$. This works because we are applying the function $(\lambda\hspace{0.4em}f,f\hspace{0.4em}(f\hspace{0.4em}3))$ to the value $(\lambda\hspace{0.4em}x, x^2)$
 (which is a function). So, $f$ becomes $\lambda\hspace{0.4em}x,x^2$. We then evaluate $f\hspace{0.4em}3$, which is $3^2=9$, and then apply $f$ to
 that result, giving us $f\hspace{0.4em}9$, which is $9^2=81$.
@@ -99,18 +105,22 @@ will be key to truly unlock the functional mindset.
 
 Let's experiment with this idea by defining a function that takes another function as input and returns its composition
 with itself. In lambda calculus, we can write this as:
+<!--math-->
 $$
 \lambda\hspace{0.4em}f, \lambda\hspace{0.4em}x, f\hspace{0.4em}(f\hspace{0.4em}x)
 $$
+<!--endmath-->
 This expression defines a function that, when given an input function $f$, returns the function $\lambda\hspace{0.4em}x, f\hspace{0.4em}(f\hspace{0.4em}x)$.
 This function, takes an argument $x$ and applies $f$ to it twice. Overall, when we apply this function to some $f$, it
 returns the composition $f \circ f$ of $f$ with itself. 
 
 We can use this to compute the fourth power of a number from the square function. Consider the following expression,
 where we apply our composition function to the squaring function $(\lambda\hspace{0.4em}x, x^2)$ and the number $2$:
+<!--math-->
 $$
 \big(\lambda\hspace{0.4em}f, \lambda\hspace{0.4em}x, f\hspace{0.4em}(f\hspace{0.4em}x)\big)\hspace{0.4em}(\lambda\hspace{0.4em}x, x^2)\hspace{0.4em}2
 $$
+<!--endmath-->
 Evaluating this will yield the following steps (we change the name of some variable $x$ to make it more readable)
 $$\begin{align*}
 & \big(\lambda\hspace{0.4em}f, \lambda\hspace{0.4em}x, f\hspace{0.4em}(f\hspace{0.4em}x)\big)\hspace{0.4em}(\lambda\hspace{0.4em}x, x^2)\hspace{0.4em}2\\
@@ -122,7 +132,8 @@ $$\begin{align*}
 \big(\text{replace $z$ with $2$}\big)\\
 \to\hspace{0.4em}& 16&&
 \big(\text{replace $y$ with $4$}\big)\\
-\end{align*}$$
+\end{align*}<!--math-->
+$$
 
 In Python, this translates to a very similar structure
 ```python
@@ -138,28 +149,37 @@ f(x)
 ```
 In raw lambda calculus, this can be accomplished with a somewhat impractical nested expression:
 $$
+<!--endmath-->
 (\lambda\hspace{0.4em}f, \lambda\hspace{0.4em}x, f\hspace{0.4em}x)\hspace{0.4em}(\dots)\hspace{0.4em}(\dots)
+<!--math-->
 $$
 Because writing this out every time would be tedious, we introduce some syntactic sugar to make it easier to read and
 write. This means we're creating convenient shortcuts that translate directly into lambda calculus.
 
 For instance, the following common notation:
-$$\begin{align*}
+$$
+<!--endmath-->\begin{align*}
 x ={}& \text{expr}_1\\
 &\text{expr}_2
-\end{align*}$$
+\end{align*}<!--math-->
+$$
 is simply another way of writing:
 $$
+<!--endmath-->
 (\lambda\hspace{0.4em}x, \text{expr}_2)\hspace{0.4em}(\text{expr}_1)
 $$
 Another piece of syntactic sugar we will use is to combine multiple $\lambda$ abstractions. So, instead of writing:
+<!--math-->
 $$
 \lambda\hspace{0.4em}x, \lambda\hspace{0.4em}y, \lambda\hspace{0.4em}z, \text{expr}
 $$
+<!--endmath-->
 we can write the more compact form:
+<!--math-->
 $$
 \lambda\hspace{0.4em}x\hspace{0.4em}y\hspace{0.4em}z, \text{expr}
 $$
+<!--endmath-->
 
 With these simplified notations, we are now ready to define more interesting and complex constructs.
 
@@ -189,21 +209,27 @@ This code snippet shows that a Boolean's role is to select between one of two va
 represent a Boolean as a function that chooses between its two arguments.
 
 We define $\operatorname{true}$ and $\operatorname{false}$ as follows:
+<!--math-->
 $$\begin{align*}
 \operatorname{true} &= \lambda\hspace{0.4em}x\hspace{0.4em}y, x\\
 \operatorname{false} &= \lambda\hspace{0.4em}x\hspace{0.4em}y, y
 \end{align*}$$
+<!--endmath-->
 With these definitions, $\operatorname{true}$ is a function that always returns the first value it's given, while $\operatorname{false}$ always
 returns the second. This allows the Python code to be translated into the elegant and simple lambda calculus expression:
+<!--math-->
 $$
 z = b\hspace{0.4em}x\hspace{0.4em}y
 $$
+<!--endmath-->
 
 Of course, Booleans are only useful if we can combine them with logical operations like `or`, `and` and `not`.
 We can easily implement $\operatorname{not}$ as
+<!--math-->
 $$
 \operatorname{not} = \lambda\hspace{0.4em}b, b\hspace{0.4em}\operatorname{false}\hspace{0.4em}\operatorname{true}
 $$
+<!--endmath-->
 If $b$ is $\operatorname{true}$, this evaluates to $\operatorname{false}$, and if $b$ is $\operatorname{false}$, it evaluates to $\operatorname{true}$, just as we would
 expect.
 
@@ -217,9 +243,11 @@ $b_1$ is $\operatorname{true}$, return $\operatorname{true}$, otherwise return $
 Since our Booleans act as selectors, where $\operatorname{true}$ selects the first argument and $\operatorname{false}$ selects the second, we can
 implement this logic by calling $b_1$ with the appropriate arguments. 
 This yields the following elegant definition for $\operatorname{or}$:
+<!--math-->
 $$
 \operatorname{or} = \lambda\hspace{0.4em}b_1\hspace{0.4em}b_2, b_1\hspace{0.4em}\operatorname{true}\hspace{0.4em}b_2
 $$
+<!--endmath-->
 Take a moment to truly understand this definition. To fully grasp the logic, try evaluating this expression by
 substituting $\operatorname{true}$ and $\operatorname{false}$ for $b_1$ and $b_2$ in all four possible combinations. This exercise will help you
 see how the simple act of function application performs the exact logical operation you expect.
@@ -229,9 +257,11 @@ $\operatorname{true}$ only if both are $\operatorname{true}$, and $\operatorname
 If $b_1$ is $\operatorname{true}$, the result should be $b_2$. Otherwise, the result should be $\operatorname{false}$.
 
 This leads to the following elegant definition for $\operatorname{and}$:
+<!--math-->
 $$
 \operatorname{and} = \lambda\hspace{0.4em}b_2\hspace{0.4em}b_2, b_1\hspace{0.4em}b_2\hspace{0.4em}\operatorname{false}
 $$
+<!--endmath-->
 Notice how this definition perfectly mirrors the logic. If $b_1$ is $\operatorname{true}$, it will select its first argument, which
 is $b_2$. If $b_1$ is $\operatorname{false}$, it will select its second argument, which is $\operatorname{false}$, giving us the correct result in
 both cases. Take a moment to trace the evaluation with different combinations of inputs for $b_1$ and $b_2$ to see this
@@ -249,16 +279,20 @@ With this, we can now define a suitable constructor for pairs, a function we'll 
 returns a function that acts as their pair.
 
 Formally:
+<!--math-->
 $$
 \operatorname{pair} = \lambda\hspace{0.4em}x\hspace{0.4em}y, \lambda\hspace{0.4em}b, b\hspace{0.4em}x\hspace{0.4em}y.
 $$
+<!--endmath-->
 
 We can also define getters to retrieve the values from a pair, functions that map a pair to either its first or second
 element:
+<!--math-->
 $$\begin{align*}
 \operatorname{first} &= \lambda\hspace{0.4em}p, \operatorname{true}\hspace{0.4em}p\\
 \operatorname{second} &= \lambda\hspace{0.4em}p, \operatorname{false}\hspace{0.4em}p
 \end{align*}$$
+<!--endmath-->
 Notice that since our pair is a function that takes a Boolean as input, all we have to do is apply the pair to $\operatorname{true}$
 or $\operatorname{false}$ to retrieve the corresponding element.
 
@@ -292,10 +326,12 @@ Note that to define any integer, we only need to define $0$ and a way to get the
 next integer). For instance, the number $2$ is the successor of the successor of $0$.
 
 This leads to the following elegant definitions in lambda calculus, often called Church numerals:
+<!--math-->
 $$\begin{align*}
 \operatorname{zero} &= \lambda\hspace{0.4em}f\hspace{0.4em}x, x\\
 \operatorname{succ} &= \lambda\hspace{0.4em}n, \lambda\hspace{0.4em}f\hspace{0.4em}x, f\hspace{0.4em}(n\hspace{0.4em}f\hspace{0.4em}x)
 \end{align*}$$
+<!--endmath-->
 
 As an exercise, verify that if $\text{two}=\operatorname{succ}\hspace{0.4em}(\operatorname{succ}\hspace{0.4em}\operatorname{zero})$, it represents a function that maps $f$ and $x$ to
 $f\big(f(x)\big)$, and convince yourself that this logic should extend to any integer.
@@ -307,14 +343,18 @@ We can define addition by thinking about what it really means. For example, to g
 successor function three times, starting from $2$. In our lambda calculus world, three is a function that applies
 another function $f$ three times to some initial value $x$. So, if we choose $f$ to be the successor function $\operatorname{succ}$
 and $x$ to be the number two, we get:
+<!--math-->
 $$
 \text{five} = \text{three}\hspace{0.4em}\operatorname{succ}\hspace{0.4em}\text{two}
 $$
+<!--endmath-->
 Generalizing this, we can define addition as a function that takes two numbers, $n$ and $m$, and applies the successor
 function $m$ times to $n$. This leads to the following elegant definition:
+<!--math-->
 $$
 \operatorname{add} = \lambda\hspace{0.4em}n\hspace{0.4em}m, m\hspace{0.4em}\operatorname{succ}\hspace{0.4em}n.
 $$
+<!--endmath-->
 Take a moment to convince yourself why this is correct. If you apply $\operatorname{add}$ to two and three, the number three will
 take $\operatorname{succ}$ and two as its arguments, applying $\operatorname{succ}$ three times to two, which correctly gives us five.
 
@@ -349,10 +389,12 @@ is to define a function that:
 - After iterating, takes the second element of the final pair (which corresponds to the `preceding` value we want).
 
 This leads to the following formal definition for $\operatorname{pred}$:
+<!--math-->
 $$\begin{align*}
 \phi &= \lambda\hspace{0.4em}p, \operatorname{pair}\hspace{0.4em}\big(\operatorname{succ}\hspace{0.4em}(\operatorname{first}\hspace{0.4em}p)\big)\hspace{0.4em}(\operatorname{first}\hspace{0.4em}p)\\
 \operatorname{pred} &= \lambda\hspace{0.4em}n, \operatorname{second}\hspace{0.4em}\big(n\hspace{0.4em}\phi\hspace{0.4em}(\operatorname{pair}\hspace{0.4em}\operatorname{zero}\hspace{0.4em}\operatorname{zero})\big)
 \end{align*}$$
+<!--endmath-->
 Take a moment to carefully trace the logic here. The variable $n$ is used to apply $\phi$ a total of $n$ times to the
 initial pair $(\operatorname{zero}, \operatorname{zero})$. After all the applications, $\operatorname{second}$ retrieves the final preceding value, giving us
 our desired result.
@@ -360,20 +402,26 @@ our desired result.
 Now that we have defined $\operatorname{pred}$, it becomes very easy to define substraction. Recall that addition was implemented by
 apply the successor function an appropriate number of times to a provided number. Similarly, subtraction can be defined
 by apply the predecessor function several time to a number. Specifically
+<!--math-->
 $$
 \operatorname{sub} = \lambda\hspace{0.4em}n\hspace{0.4em}m, m\hspace{0.4em}\operatorname{pred}\hspace{0.4em}n.
 $$
+<!--endmath-->
 Make sure you understand that applying $m$ times $\operatorname{pred}$ to $n$ indeed yields $m-n$. Also note that if $n$ is larger
 than $m$, we get $0$.
 
 Multiplication is also quite simple. When computing $n\times m$, we are basically adding $n$ to $0$, $m$ times:
+<!--math-->
 $$\begin{align*}
 n\times m = n+\dots+n+0
 \end{align*}$$
+<!--endmath-->
 In lambda calculus, this translates directly to
+<!--math-->
 $$
 \operatorname{mul} = \lambda\hspace{0.4em}n\hspace{0.4em}m, m\hspace{0.4em}(\lambda\hspace{0.4em}k, \operatorname{add}\hspace{0.4em}n\hspace{0.4em}k)\hspace{0.4em}\operatorname{zero}.
 $$
+<!--endmath-->
 Make sure you understand this expression. Note that $\lambda\hspace{0.4em}k, \operatorname{add}\hspace{0.4em}n\hspace{0.4em}k$ is a function that takes an integer $k$ and
 outputs $k+n$, i.e., it is the "add $n$" function. If we apply this function $m$ times to $0$, we are adding $m\times n$
 to $0$, which is indeed $m\times n$.
@@ -394,24 +442,32 @@ def is_zero(n):
     return result
 ```
 And this indeed returns `True` if and only if `n == 0`. In lambda calculus, we can write this as
+<!--math-->
 $$
 \operatorname{isZero}=\lambda\hspace{0.4em}n,n\hspace{0.4em}(\lambda\hspace{0.4em}x,\operatorname{false})\hspace{0.4em}\operatorname{true}.
 $$
+<!--endmath-->
 Make sure to verify that this is indeed a translation of the above python code in lambda calculus.
 
 This operator will enable us to define comparison operators such as $\leq$, $<$ and $=$. Recall that when we computed
 $\operatorname{sub}\hspace{0.4em}n\hspace{0.4em}m$, we would get $\operatorname{zero}$ whenever $n\leq m$. So by combining $\operatorname{sub}$ and $\operatorname{isZero}$, we can implement the
 operator $\leq$ to compare elements:
+<!--math-->
 $$
 \operatorname{leg}=\lambda\hspace{0.4em}n\hspace{0.4em}m, \operatorname{isZero}\hspace{0.4em}(\operatorname{sub}\hspace{0.4em}n\hspace{0.4em}m).
 $$
+<!--endmath-->
 Also note that in python `n < m` is always equal to `not (m <= n)`, so we can implement the `<` operator as
+<!--math-->
 $$
 \operatorname{lt}=\lambda\hspace{0.4em}n\hspace{0.4em}m, \operatorname{not}\hspace{0.4em}(\operatorname{leg}\hspace{0.4em}m\hspace{0.4em}n).
 $$
+<!--endmath-->
 Last but not least, we also have `n == m` if and only if both `n <= m` and `m <= n` hold, so we can implement the `==`
 operator as
+<!--math-->
 $$
 \operatorname{eq}=\lambda\hspace{0.4em}n\hspace{0.4em}m, \operatorname{and}\hspace{0.4em}(\operatorname{leg}\hspace{0.4em}n\hspace{0.4em}m)\hspace{0.4em}(\operatorname{leg}\hspace{0.4em}m\hspace{0.4em}n).
 $$
+<!--endmath-->
 Make sure you understand why these three operators work and verify that they are correct.
