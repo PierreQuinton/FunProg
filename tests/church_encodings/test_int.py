@@ -11,6 +11,8 @@ from church_encodings.int import (
     i_leq,
     i_lt,
     i_eq,
+    i_div,
+    i_mod,
 )
 from church_encodings.equivalences import from_bool, from_int, to_int
 
