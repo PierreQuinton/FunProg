@@ -1,7 +1,3 @@
-> Note: Somehow the GitHub markdown reader does not render equations properly, this is best read on a local reader such
-> as the Pycharm/VSCode Markdown plugin
-
-
 ## Functional Programming?
 
 This course isn't about becoming a functional programming expert or mastering a specific functional language like Rust.
@@ -54,19 +50,19 @@ f(-7)                  # 49
 
 Similarly, in lambda calculus, the expression
 $$
-\lambda~x, x^2
+\lambda\,\,x, x^2
 $$
 represents the function mapping some $x$ to its square $x^2$.
 
-In lambda calculus, applying a function $f$ to a value $x$ is written as $f~x$, omitting the parentheses typically used
+In lambda calculus, applying a function $f$ to a value $x$ is written as $f\,\,x$, omitting the parentheses typically used
 in other notations like $f(x)$. The primary reason for this is to avoid overly nested parentheses: you don't want to
-write $f(g(h(f(d(x)))))$. Parentheses are still used to specify the order of operations. For example $f~(g~x)$
+write $f(g(h(f(d(x)))))$. Parentheses are still used to specify the order of operations. For example $f\,\,(g\,\,x)$
 represents applying $f$ to the result of applying $g$ to $x$. It's important to note that this is different from
-$g~f~x$, which is the same as $(g~f)~x$.
+$g\,\,f\,\,x$, which is the same as $(g\,\,f)\,\,x$.
 
-Since $\lambda~x, x^2$ is a function, we can apply it to a value. For instance
+Since $\lambda\,\,x, x^2$ is a function, we can apply it to a value. For instance
 $$
-(\lambda~x, x^2)~2
+(\lambda\,\,x, x^2)\,\,2
 $$
 evaluates to $4$.
 In python this can be directly translated to
@@ -77,11 +73,11 @@ In python this can be directly translated to
 What if we want to apply the same function to several inputs without redefining it every time? We can assign it a
 name by defining a lambda expression that binds the function to a variable. For example, consider the expression:
 $$
-\big(\lambda~f, f~(f~3)\big)(\lambda~x, x^2)
+\big(\lambda\,\,f, f\,\,(f\,\,3)\big)(\lambda\,\,x, x^2)
 $$
-evaluates to $81$. This works because we are applying the function $(\lambda~f,f~(f~3))$ to the value $(\lambda~x, x^2)$
-(which is a function). So, $f$ becomes $\lambda~x,x^2$. We then evaluate $f~3$, which is $3^2=9$, and then apply $f$ to
-that result, giving us $f~9$, which is $9^2=81$.
+evaluates to $81$. This works because we are applying the function $(\lambda\,\,f,f\,\,(f\,\,3))$ to the value $(\lambda\,\,x, x^2)$
+(which is a function). So, $f$ becomes $\lambda\,\,x,x^2$. We then evaluate $f\,\,3$, which is $3^2=9$, and then apply $f$ to
+that result, giving us $f\,\,9$, which is $9^2=81$.
 
 In Python, if we didn't have the `def` keyword, we could achieve a similar result by nesting lambdas:
 ```python
@@ -104,27 +100,27 @@ will be key to truly unlock the functional mindset.
 Let's experiment with this idea by defining a function that takes another function as input and returns its composition
 with itself. In lambda calculus, we can write this as:
 $$
-\lambda~f, \lambda~x, f~(f~x)
+\lambda\,\,f, \lambda\,\,x, f\,\,(f\,\,x)
 $$
-This expression defines a function that, when given an input function $f$, returns the function $\lambda~x, f~(f~x)$.
+This expression defines a function that, when given an input function $f$, returns the function $\lambda\,\,x, f\,\,(f\,\,x)$.
 This function, takes an argument $x$ and applies $f$ to it twice. Overall, when we apply this function to some $f$, it
 returns the composition $f \circ f$ of $f$ with itself. 
 
 We can use this to compute the fourth power of a number from the square function. Consider the following expression,
-where we apply our composition function to the squaring function $(\lambda~x, x^2)$ and the number $2$:
+where we apply our composition function to the squaring function $(\lambda\,\,x, x^2)$ and the number $2$:
 $$
-\big(\lambda~f, \lambda~x, f~(f~x)\big)~(\lambda~x, x^2)~2
+\big(\lambda\,\,f, \lambda\,\,x, f\,\,(f\,\,x)\big)\,\,(\lambda\,\,x, x^2)\,\,2
 $$
 Evaluating this will yield the following steps (we change the name of some variable $x$ to make it more readable)
 $$\begin{align*}
-& \big(\lambda~f, \lambda~x, f~(f~x)\big)~(\lambda~x, x^2)~2\\
-\to~& \bigg(\lambda~x, \Big((\lambda~y, y^2)~\big((\lambda~z, z^2)~x\big)\Big)\bigg)~2&&
-\big(\text{replace $f$ with $(\lambda~x, x^2)$}\big)\\
-\to~& (\lambda~y, y^2)~\big((\lambda~z, z^2)~2\big)&&
+& \big(\lambda\,\,f, \lambda\,\,x, f\,\,(f\,\,x)\big)\,\,(\lambda\,\,x, x^2)\,\,2\\
+\to\,\,& \bigg(\lambda\,\,x, \Big((\lambda\,\,y, y^2)\,\,\big((\lambda\,\,z, z^2)\,\,x\big)\Big)\bigg)\,\,2&&
+\big(\text{replace $f$ with $(\lambda\,\,x, x^2)$}\big)\\
+\to\,\,& (\lambda\,\,y, y^2)\,\,\big((\lambda\,\,z, z^2)\,\,2\big)&&
 \big(\text{replace $x$ with $2$}\big)\\
-\to~& (\lambda~y, y^2)~4&&
+\to\,\,& (\lambda\,\,y, y^2)\,\,4&&
 \big(\text{replace $z$ with $2$}\big)\\
-\to~& 16&&
+\to\,\,& 16&&
 \big(\text{replace $y$ with $4$}\big)\\
 \end{align*}$$
 
@@ -142,7 +138,7 @@ f(x)
 ```
 In raw lambda calculus, this can be accomplished with a somewhat impractical nested expression:
 $$
-(\lambda~f, \lambda~x, f~x)~(\dots)~(\dots)
+(\lambda\,\,f, \lambda\,\,x, f\,\,x)\,\,(\dots)\,\,(\dots)
 $$
 Because writing this out every time would be tedious, we introduce some syntactic sugar to make it easier to read and
 write. This means we're creating convenient shortcuts that translate directly into lambda calculus.
@@ -154,15 +150,15 @@ x ={}& \text{expr}_1\\
 \end{align*}$$
 is simply another way of writing:
 $$
-(\lambda~x, \text{expr}_2)~(\text{expr}_1)
+(\lambda\,\,x, \text{expr}_2)\,\,(\text{expr}_1)
 $$
 Another piece of syntactic sugar we will use is to combine multiple $\lambda$ abstractions. So, instead of writing:
 $$
-\lambda~x, \lambda~y, \lambda~z, \text{expr}
+\lambda\,\,x, \lambda\,\,y, \lambda\,\,z, \text{expr}
 $$
 we can write the more compact form:
 $$
-\lambda~x~y~z, \text{expr}
+\lambda\,\,x\,\,y\,\,z, \text{expr}
 $$
 
 With these simplified notations, we are now ready to define more interesting and complex constructs.
@@ -194,19 +190,19 @@ represent a Boolean as a function that chooses between its two arguments.
 
 We define $\operatorname{true}$ and $\operatorname{false}$ as follows:
 $$\begin{align*}
-\operatorname{true} &= \lambda~x~y, x\\
-\operatorname{false} &= \lambda~x~y, y
+\operatorname{true} &= \lambda\,\,x\,\,y, x\\
+\operatorname{false} &= \lambda\,\,x\,\,y, y
 \end{align*}$$
 With these definitions, $\operatorname{true}$ is a function that always returns the first value it's given, while $\operatorname{false}$ always
 returns the second. This allows the Python code to be translated into the elegant and simple lambda calculus expression:
 $$
-z = b~x~y
+z = b\,\,x\,\,y
 $$
 
 Of course, Booleans are only useful if we can combine them with logical operations like `or`, `and` and `not`.
 We can easily implement $\operatorname{not}$ as
 $$
-\operatorname{not} = \lambda~b, b~\operatorname{false}~\operatorname{true}
+\operatorname{not} = \lambda\,\,b, b\,\,\operatorname{false}\,\,\operatorname{true}
 $$
 If $b$ is $\operatorname{true}$, this evaluates to $\operatorname{false}$, and if $b$ is $\operatorname{false}$, it evaluates to $\operatorname{true}$, just as we would
 expect.
@@ -222,7 +218,7 @@ Since our Booleans act as selectors, where $\operatorname{true}$ selects the fir
 implement this logic by calling $b_1$ with the appropriate arguments. 
 This yields the following elegant definition for $\operatorname{or}$:
 $$
-\operatorname{or} = \lambda~b_1~b_2, b_1~\operatorname{true}~b_2
+\operatorname{or} = \lambda\,\,b_1\,\,b_2, b_1\,\,\operatorname{true}\,\,b_2
 $$
 Take a moment to truly understand this definition. To fully grasp the logic, try evaluating this expression by
 substituting $\operatorname{true}$ and $\operatorname{false}$ for $b_1$ and $b_2$ in all four possible combinations. This exercise will help you
@@ -234,7 +230,7 @@ If $b_1$ is $\operatorname{true}$, the result should be $b_2$. Otherwise, the re
 
 This leads to the following elegant definition for $\operatorname{and}$:
 $$
-\operatorname{and} = \lambda~b_2~b_2, b_1~b_2~\operatorname{false}
+\operatorname{and} = \lambda\,\,b_2\,\,b_2, b_1\,\,b_2\,\,\operatorname{false}
 $$
 Notice how this definition perfectly mirrors the logic. If $b_1$ is $\operatorname{true}$, it will select its first argument, which
 is $b_2$. If $b_1$ is $\operatorname{false}$, it will select its second argument, which is $\operatorname{false}$, giving us the correct result in
@@ -254,19 +250,19 @@ returns a function that acts as their pair.
 
 Formally:
 $$
-\operatorname{pair} = \lambda~x~y, \lambda~b, b~x~y.
+\operatorname{pair} = \lambda\,\,x\,\,y, \lambda\,\,b, b\,\,x\,\,y.
 $$
 
 We can also define getters to retrieve the values from a pair, functions that map a pair to either its first or second
 element:
 $$\begin{align*}
-\operatorname{first} &= \lambda~p, \operatorname{true}~p\\
-\operatorname{second} &= \lambda~p, \operatorname{false}~p
+\operatorname{first} &= \lambda\,\,p, \operatorname{true}\,\,p\\
+\operatorname{second} &= \lambda\,\,p, \operatorname{false}\,\,p
 \end{align*}$$
 Notice that since our pair is a function that takes a Boolean as input, all we have to do is apply the pair to $\operatorname{true}$
 or $\operatorname{false}$ to retrieve the corresponding element.
 
-As an exercise, you should verify that $\operatorname{first}~(\operatorname{pair}~x~y)$ evaluates to $x$ while $\operatorname{second}~(\operatorname{pair}~x~y)$ evaluates
+As an exercise, you should verify that $\operatorname{first}\,\,(\operatorname{pair}\,\,x\,\,y)$ evaluates to $x$ while $\operatorname{second}\,\,(\operatorname{pair}\,\,x\,\,y)$ evaluates
 to $u$.
 
 ### Integer
@@ -297,11 +293,11 @@ next integer). For instance, the number $2$ is the successor of the successor of
 
 This leads to the following elegant definitions in lambda calculus, often called Church numerals:
 $$\begin{align*}
-\operatorname{zero} &= \lambda~f~x, x\\
-\operatorname{succ} &= \lambda~n, \lambda~f~x, f~(n~f~x)
+\operatorname{zero} &= \lambda\,\,f\,\,x, x\\
+\operatorname{succ} &= \lambda\,\,n, \lambda\,\,f\,\,x, f\,\,(n\,\,f\,\,x)
 \end{align*}$$
 
-As an exercise, verify that if $\text{two}=\operatorname{succ}~(\operatorname{succ}~\operatorname{zero})$, it represents a function that maps $f$ and $x$ to
+As an exercise, verify that if $\text{two}=\operatorname{succ}\,\,(\operatorname{succ}\,\,\operatorname{zero})$, it represents a function that maps $f$ and $x$ to
 $f\big(f(x)\big)$, and convince yourself that this logic should extend to any integer.
 
 Now that we have our building blocks, let's see how we can perform operations on them. Let's start with a simple one:
@@ -312,12 +308,12 @@ successor function three times, starting from $2$. In our lambda calculus world,
 another function $f$ three times to some initial value $x$. So, if we choose $f$ to be the successor function $\operatorname{succ}$
 and $x$ to be the number two, we get:
 $$
-\text{five} = \text{three}~\operatorname{succ}~\text{two}
+\text{five} = \text{three}\,\,\operatorname{succ}\,\,\text{two}
 $$
 Generalizing this, we can define addition as a function that takes two numbers, $n$ and $m$, and applies the successor
 function $m$ times to $n$. This leads to the following elegant definition:
 $$
-\operatorname{add} = \lambda~n~m, m~\operatorname{succ}~n.
+\operatorname{add} = \lambda\,\,n\,\,m, m\,\,\operatorname{succ}\,\,n.
 $$
 Take a moment to convince yourself why this is correct. If you apply $\operatorname{add}$ to two and three, the number three will
 take $\operatorname{succ}$ and two as its arguments, applying $\operatorname{succ}$ three times to two, which correctly gives us five.
@@ -354,8 +350,8 @@ is to define a function that:
 
 This leads to the following formal definition for $\operatorname{pred}$:
 $$\begin{align*}
-\phi &= \lambda~p, \operatorname{pair}~\big(\operatorname{succ}~(\operatorname{first}~p)\big)~(\operatorname{first}~p)\\
-\operatorname{pred} &= \lambda~n, \operatorname{second}~\big(n~\phi~(\operatorname{pair}~\operatorname{zero}~\operatorname{zero})\big)
+\phi &= \lambda\,\,p, \operatorname{pair}\,\,\big(\operatorname{succ}\,\,(\operatorname{first}\,\,p)\big)\,\,(\operatorname{first}\,\,p)\\
+\operatorname{pred} &= \lambda\,\,n, \operatorname{second}\,\,\big(n\,\,\phi\,\,(\operatorname{pair}\,\,\operatorname{zero}\,\,\operatorname{zero})\big)
 \end{align*}$$
 Take a moment to carefully trace the logic here. The variable $n$ is used to apply $\phi$ a total of $n$ times to the
 initial pair $(\operatorname{zero}, \operatorname{zero})$. After all the applications, $\operatorname{second}$ retrieves the final preceding value, giving us
@@ -365,7 +361,7 @@ Now that we have defined $\operatorname{pred}$, it becomes very easy to define s
 apply the successor function an appropriate number of times to a provided number. Similarly, subtraction can be defined
 by apply the predecessor function several time to a number. Specifically
 $$
-\operatorname{sub} = \lambda~n~m, m~\operatorname{pred}~n.
+\operatorname{sub} = \lambda\,\,n\,\,m, m\,\,\operatorname{pred}\,\,n.
 $$
 Make sure you understand that applying $m$ times $\operatorname{pred}$ to $n$ indeed yields $m-n$. Also note that if $n$ is larger
 than $m$, we get $0$.
@@ -376,9 +372,9 @@ n\times m = n+\dots+n+0
 \end{align*}$$
 In lambda calculus, this translates directly to
 $$
-\operatorname{mul} = \lambda~n~m, m~(\lambda~k, \operatorname{add}~n~k)~\operatorname{zero}.
+\operatorname{mul} = \lambda\,\,n\,\,m, m\,\,(\lambda\,\,k, \operatorname{add}\,\,n\,\,k)\,\,\operatorname{zero}.
 $$
-Make sure you understand this expression. Note that $\lambda~k, \operatorname{add}~n~k$ is a function that takes an integer $k$ and
+Make sure you understand this expression. Note that $\lambda\,\,k, \operatorname{add}\,\,n\,\,k$ is a function that takes an integer $k$ and
 outputs $k+n$, i.e., it is the "add $n$" function. If we apply this function $m$ times to $0$, we are adding $m\times n$
 to $0$, which is indeed $m\times n$.
 
@@ -399,23 +395,23 @@ def is_zero(n):
 ```
 And this indeed returns `True` if and only if `n == 0`. In lambda calculus, we can write this as
 $$
-\operatorname{isZero}=\lambda~n,n~(\lambda~x,\operatorname{false})~\operatorname{true}.
+\operatorname{isZero}=\lambda\,\,n,n\,\,(\lambda\,\,x,\operatorname{false})\,\,\operatorname{true}.
 $$
 Make sure to verify that this is indeed a translation of the above python code in lambda calculus.
 
 This operator will enable us to define comparison operators such as $\leq$, $<$ and $=$. Recall that when we computed
-$\operatorname{sub}~n~m$, we would get $\operatorname{zero}$ whenever $n\leq m$. So by combining $\operatorname{sub}$ and $\operatorname{isZero}$, we can implement the
+$\operatorname{sub}\,\,n\,\,m$, we would get $\operatorname{zero}$ whenever $n\leq m$. So by combining $\operatorname{sub}$ and $\operatorname{isZero}$, we can implement the
 operator $\leq$ to compare elements:
 $$
-\operatorname{leg}=\lambda~n~m, \operatorname{isZero}~(\operatorname{sub}~n~m).
+\operatorname{leg}=\lambda\,\,n\,\,m, \operatorname{isZero}\,\,(\operatorname{sub}\,\,n\,\,m).
 $$
 Also note that in python `n < m` is always equal to `not (m <= n)`, so we can implement the `<` operator as
 $$
-\operatorname{lt}=\lambda~n~m, \operatorname{not}~(\operatorname{leg}~m~n).
+\operatorname{lt}=\lambda\,\,n\,\,m, \operatorname{not}\,\,(\operatorname{leg}\,\,m\,\,n).
 $$
 Last but not least, we also have `n == m` if and only if both `n <= m` and `m <= n` hold, so we can implement the `==`
 operator as
 $$
-\operatorname{eq}=\lambda~n~m, \operatorname{and}~(\operatorname{leg}~n~m)~(\operatorname{leg}~m~n).
+\operatorname{eq}=\lambda\,\,n\,\,m, \operatorname{and}\,\,(\operatorname{leg}\,\,n\,\,m)\,\,(\operatorname{leg}\,\,m\,\,n).
 $$
 Make sure you understand why these three operators work and verify that they are correct.
