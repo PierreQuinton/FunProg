@@ -295,8 +295,8 @@ We can also define getters to retrieve the values from a pair, functions that ma
 element:
 <!--math-->
 $$\begin{align*}
-\mathrm{first} &= \lambda\hspace{0.4em}p, \mathrm{true}\hspace{0.4em}p\\
-\mathrm{second} &= \lambda\hspace{0.4em}p, \mathrm{false}\hspace{0.4em}p
+\mathrm{first} &= \lambda\hspace{0.4em}p, p\hspace{0.4em}\mathrm{true}\\
+\mathrm{second} &= \lambda\hspace{0.4em}p, p\hspace{0.4em}\mathrm{false}
 \end{align*}$$
 <!--endmath-->
 Notice that since our pair is a function that takes a Boolean as input, all we have to do is apply the pair to $\mathrm{true}$
