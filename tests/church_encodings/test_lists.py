@@ -1,7 +1,7 @@
 from pytest import mark
 
-from church_encodings.list import l_nil, l_cons, l_append, l_is_nil, l_is_non_empty, l_head, l_tail, l_filter, l_map, l_flat_map
-from church_encodings.equivalences import  from_list, to_list, from_bool, to_bool
+from church_encodings.list import l_nil, l_cons, l_append, l_is_nil, l_is_non_empty, l_head, l_tail, l_filter, l_map, l_flat_map, l_at
+from church_encodings.equivalences import  from_list, to_list, from_bool, to_bool, from_int
 
 
 def test_nil():
@@ -61,3 +61,8 @@ def test_map(l, f):
 def test_flat_map(ls):
     fromed_ls = from_list([from_list(l) for l in ls])
     assert to_list(l_flat_map(fromed_ls)) == [a for l in ls for a in l]
+
+
+@mark.parametrize(("l", "i"), [([1], 0), ([1, 2, 3], 1), (["blob", "blib", "bloub"], 2)])
+def test_at(l, i):
+    assert l_at(from_list(l), from_int(i)) == l[i]
