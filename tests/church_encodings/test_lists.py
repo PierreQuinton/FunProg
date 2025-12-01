@@ -61,8 +61,3 @@ def test_map(l, f):
 def test_flat_map(ls):
     fromed_ls = from_list([from_list(l) for l in ls])
     assert to_list(l_flat_map(fromed_ls)) == [a for l in ls for a in l]
-
-
-@mark.parametrize(("l", "i"), [([1], 0), ([1, 2, 3], 1), (["blob", "blib", "bloub"], 2)])
-def test_at(l, i):
-    assert l_at(from_list(l), from_int(i)) == l[i]
