@@ -22,11 +22,15 @@ def to_pair(p):
 
 
 def from_int(n):
-    ...
+    temp = i_zero
+    for i in range(n):
+        temp = i_succ(temp)
+
+    return temp
 
 
 def to_int(n):
-    ...
+    return n(lambda x: x+1, 0)
 
 
 def from_list(l):
