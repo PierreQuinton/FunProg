@@ -1,7 +1,9 @@
 from pytest import mark
 
-from church_encodings.list import l_nil, l_cons, l_append, l_is_nil, l_is_non_empty, l_head, l_tail, l_filter, l_map, l_flat_map, l_at
-from church_encodings.equivalences import  from_list, to_list, from_bool, to_bool, from_int
+from church_encodings.list import l_nil, l_cons, l_append, l_is_nil, l_is_non_empty, l_head, l_tail, \
+    l_filter, l_map, l_flatmap, l_at
+from church_encodings.equivalences import from_list, to_list, from_bool, to_bool, to_option, \
+    from_int
 
 
 def test_nil():
@@ -30,14 +32,24 @@ def test_is_non_empty(l):
     assert to_bool(l_is_non_empty(from_list(l))) == (len(l) != 0)
 
 
-@mark.parametrize("l", [[1], [1, 2, 3], ["blob", "blib", "bloub"]])
+@mark.parametrize("l", [[], [1], [1, 2, 3], ["blob", "blib", "bloub"]])
 def test_head(l):
-    assert l_head(from_list(l)) == l[0]
+    assert to_option(l_head(from_list(l))) == (l[0] if len(l) > 0 else None)
 
 
 @mark.parametrize("l", [[1], [1, 2, 3], ["blob", "blib", "bloub"]])
-def test_tail(l):
-    assert to_list(l_tail(from_list(l))) == l[1:]
+def test_cons_tail(l):
+    assert to_list(to_option(l_tail(from_list(l)))) == l[1:]
+
+
+def test_nil_tail():
+    assert to_option(l_tail(from_list([]))) is None
+
+
+@mark.parametrize("l", [[1], [1, 2, 3], ["blob", "blib", "bloub"]])
+@mark.parametrize("i", [0, 1, 2, 3])
+def test_at(l, i):
+    assert to_option(l_at(from_list(l), from_int(i))) == (l[i] if i < len(l) else None)
 
 
 @mark.parametrize("l", [[1], [3, 2, 9], [1, 6, 9, 3]])
@@ -54,10 +66,8 @@ def test_map(l, f):
     fromed_l = from_list(l)
     assert to_list(l_map(fromed_l, f)) == [f(x) for x in l]
 
-@mark.parametrize("ls", [
-    [[1], [3, 2, 9], [1, 6, 9, 3]],
-    [["blab"], [], ["bloub", "blob"]]
-])
+@mark.parametrize("ls", [[1], [3, 2, 9], [1, 6, 9, 3]])
 def test_flat_map(ls):
-    fromed_ls = from_list([from_list(l) for l in ls])
-    assert to_list(l_flat_map(fromed_ls)) == [a for l in ls for a in l]
+    g = lambda x: from_list([x] * x)
+    l_ls = from_list(ls)
+    assert to_list(l_flatmap(l_ls, g)) == [x for a in ls for x in to_list(g(a))]

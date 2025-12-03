@@ -1,4 +1,5 @@
 from church_encodings.bool import b_false, b_true
+from church_encodings.option import o_some, o_none
 from church_encodings.pair import p_pair, p_first, p_second
 from church_encodings.int import  i_zero, i_succ
 from church_encodings.list import l_nil, l_cons
@@ -38,4 +39,12 @@ def from_list(l):
 
 
 def to_list(l):
+    ...
+
+
+def from_option(o):
+    ...
+
+
+def to_option(o):
     ...
