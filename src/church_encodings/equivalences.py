@@ -35,16 +35,22 @@ def to_int(n):
 
 
 def from_list(l):
-    ...
+    temp = l_nil
+    for y in reversed(l):
+        temp = l_cons(y, temp)
+    return temp
 
 
 def to_list(l):
-    ...
+    return l(lambda x, y: [x] + y, [])
 
 
 def from_option(o):
-    ...
+    if o is None:
+        return o_none
+    else:
+        return o_some(o)
 
 
 def to_option(o):
-    ...
+    return o(lambda x: x, None)

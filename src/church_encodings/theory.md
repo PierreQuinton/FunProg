@@ -275,7 +275,7 @@ in action.
 
 ### Pair
 Next, we'll define a pair of values. This is a foundational step, as more complex data structures like tuples can be
-bumathrm{lt} by nesting pairs (a tuple of three elements is just a pair of a value and another pair).
+built by nesting pairs (a tuple of three elements is just a pair of a value and another pair).
 
 A pair's core role is to contain two values and provide a way to access each of them. With this role in mind, we can
 view a pair as a function that maps an index to a value. And what better index to use than our newly defined Booleans?
@@ -302,8 +302,8 @@ $$\begin{align*}
 Notice that since our pair is a function that takes a Boolean as input, all we have to do is apply the pair to $\mathrm{true}$
 or $\mathrm{false}$ to retrieve the corresponding element.
 
-As an exercise, you should verify that $\mathrm{first}\hspace{0.4em}(\mathrm{pair}\hspace{0.4em}x\hspace{0.4em}y)$ evaluates to $x$ while $\mathrm{second}\hspace{0.4em}(\mathrm{pair}\hspace{0.4em}x\hspace{0.4em}y)$ evaluates
-to $u$.
+As an exercise, you should verify that $\mathrm{first}\hspace{0.4em}(\mathrm{pair}\hspace{0.4em}u\hspace{0.4em}v)$ evaluates to $u$ while $\mathrm{second}\hspace{0.4em}(\mathrm{pair}\hspace{0.4em}u\hspace{0.4em}v)$ evaluates
+to $v$.
 
 ### Integer
 The most common use of an integer is to perform an action a certain number of times, as seen in a `for` loop. For
@@ -477,3 +477,209 @@ $$
 $$
 <!--endmath-->
 Make sure you understand why these three operators work and verify that they are correct.
+
+### Option
+
+So far, we have built Booleans to handle logic, Pairs to handle structure, and Integers to handle repetition. But in
+real-world programming, we often face a problem: the absence of a value. In Python, we typically use `None` to represent
+this. However, `None` is notorious for causing errors; if you try to call a method on `None`, your program crashes with
+an `AttributeError`. Functional programming solves this by using the Option type (sometimes called "Maybe").
+
+Instead of a raw value that might be "missing," we use a container that is either empty or contains exactly one value.
+As always, let's define the Option by its role. An Option's job is to safely handle a choice: "If I have a value, apply
+this function to it; otherwise, return this default."
+
+In Python, this logic looks like this:
+```python
+y if option is None else f(option)
+```
+This leads us to our lambda calculus constructors. We need a way to represent "Nothing" (none) and a way to wrap "Something" (some):
+<!--math-->
+$$
+\begin{align*}
+\mathrm{none}&=\lambda\hspace{0.4em}f\hspace{0.4em}y, y\\
+\mathrm{some}&=\lambda\hspace{0.4em}x, \lambda\hspace{0.4em}f\hspace{0.4em}y, f\hspace{0.4em}x
+\end{align*}
+$$
+<!--endmath-->
+
+In this model, the Option is the switch. If you have a none, it ignores the function $f$ and returns the default $y$. If
+you have a $\mathrm{some} x$, it applies $f$ to $x$.
+
+Just as we had isZero for integers, we need a way to check if an Option is empty. We can do this by passing a function
+that always returns false (if a value exists) and a default of true (if it doesn't):
+<!--math-->
+$$
+\begin{align*}
+\mathrm{isNone}&=\lambda\hspace{0.4em}o, o\hspace{0.4em}(\lambda\hspace{0.4em}x, \mathrm{false})\hspace{0.4em}\mathrm{true}
+\end{align*}
+$$
+<!--endmath-->
+
+The true power of Options comes when we want to transform the value inside without manually checking for none every
+time. This is called map.
+
+If we have an option, oMap reaches inside, applies a function to the value if it exists, and puts the result back into a
+new option. If the option was empty, it stays empty.
+<!--math-->
+$$
+\begin{align*}
+\mathrm{oMap}&=\lambda\hspace{0.4em}o\hspace{0.4em}f, o\hspace{0.4em}\big(\lambda\hspace{0.4em}x, \mathrm{some}\hspace{0.4em}(f\hspace{0.4em}x)\big)\hspace{0.4em}\mathrm{none}
+\end{align*}
+$$
+<!--endmath-->
+
+
+Finally, consider a situation where you have a function that itself returns an Option. If you use oMap with that
+function, you end up with a nested Option: a "box inside a box" (e.g.,
+$\mathrm{some}\hspace{0.4em}(\mathrm{some}\hspace{0.4em}x)$).
+
+In functional programming, we typically prefer to "flatten" these levels. This is the role of oFlatMap. Instead of
+wrapping the result in a new some constructor, it simply returns the result of the function directly:
+<!--math-->
+$$
+\begin{align*}
+\mathrm{oFlatMap}&=\lambda\hspace{0.4em}o\hspace{0.4em}f, o\hspace{0.4em}(\lambda\hspace{0.4em}x, f\hspace{0.4em}x)\hspace{0.4em}\mathrm{none}
+\end{align*}
+$$
+<!--endmath-->
+
+### List
+
+We are now ready to implement one of the most versatile structures in programming: the List.
+
+As we have done with every other type, we must ask: what is the fundamental role of a list? While we often think of it as a container, its primary role in practice is iteration. Almost every operation we perform on a list (searching, filtering, summing, transforming, ...) can be expressed as a loop that processes each element to produce a final result.
+
+In Python, this pattern is often called a "fold" or "reduce":
+```python
+x = ...
+f = ...
+l = ...
+for y in l:
+    x = f(y, x)
+```
+Based on this role, we define a list as a function that takes a "step function" $f$ and an "initial value" $x$.
+
+To build any list, we only need two constructors: one for the empty list (nil) and one to prepend a single element to an existing list (cons, short for "construct").
+<!--math-->
+$$
+\begin{align*}
+\mathrm{nil}&=\lambda\hspace{0.4em}f\hspace{0.4em}x, x\\
+\mathrm{cons}&=\lambda\hspace{0.4em}h\hspace{0.4em}t, \lambda\hspace{0.4em}f\hspace{0.4em}x, f\hspace{0.4em}h\hspace{0.4em}(t\hspace{0.4em}f\hspace{0.4em}x)
+\end{align*}
+$$
+<!--endmath-->
+
+With this representation, the list $\begin{bmatrix} y_1&y_2&\cdots&y_{n-1}&y_n \end{bmatrix}$ is described by the mapping
+<!--math-->
+$$
+(f, x)\mapsto f\bigg(y_1, f\Big(y_2, \cdots f\big(y_{n-1}, f(y_n, x)\big)\cdots\Big)\bigg)
+$$
+<!--endmath-->
+
+Appending two lists is remarkably similar to adding two integers.
+This is because we can prepend every element of the first list to the second one. This gives us the following implementation
+<!--math-->
+$$
+\mathrm{append}=\lambda\hspace{0.4em}\ell_1\hspace{0.4em}\ell_2, \ell_1\hspace{0.4em}\mathrm{cons}\hspace{0.4em}\ell_2
+$$
+<!--endmath-->
+
+The length of a list can simply be obtained by increasing a number at every iteration on a list:
+<!--math-->
+$$
+\mathrm{length}=\lambda\hspace{0.4em}\ell, \ell\hspace{0.4em}(\lambda\hspace{0.4em}h\hspace{0.4em}v, \mathrm{succ}\hspace{0.4em}v)\hspace{0.4em}\mathrm{zero}
+$$
+<!--endmath-->
+
+With this in hand, we can test if a list is empty by checking if its length is zero:
+<!--math-->
+$$
+\mathrm{isNonEmpty}=\lambda\hspace{0.4em}\ell, \mathrm{not}\hspace{0.4em}\big(\mathrm{isZero}\hspace{0.4em}(\mathrm{length}\hspace{0.4em}\ell)\big)
+$$
+<!--endmath-->
+
+
+All list comprehension in python can be decomposed into combinations of three functions: map, flatmap and filter.
+Let's start with filter, its role is to perform the following list comprehension:
+```python
+l = ...  # list
+p = lambda x: ...  # bool
+[x for x in l if p(x)]
+```
+It takes a list and a predicate function mapping any element of the list to a boolean, and filter accordingly to the value of the predicate.
+
+In lambda calculus, we can implement it by calling cons on any element satisfying the predicate, adding them one by one to a list:
+<!--math-->
+$$
+\mathrm{filter}=\lambda\hspace{0.4em}\ell\hspace{0.4em}p, \ell\hspace{0.4em}\big(\lambda\hspace{0.4em}h\hspace{0.4em}v, (p\hspace{0.4em}h)\hspace{0.4em}(\mathrm{cons}\hspace{0.4em}h\hspace{0.4em}v)\hspace{0.4em}v\big)\hspace{0.4em}\mathrm{nil}
+$$
+<!--endmath-->
+
+Next we move on to map, in Python it corresponds to the following list comprehension
+```python
+l = ...
+f = lambda x: ...
+[f(x) for x in l]
+```
+Specifically, it takes a list and a function, and creates a new list whose elements correspond to an element in the original list, mapped through the function.
+
+In lambda calculus, we can implement this by constructing a list iteratively containing the mapped elements:
+<!--math-->
+$$
+\mathrm{lMap}=\lambda\hspace{0.4em}\ell\hspace{0.4em}f, \ell\hspace{0.4em}\big(\lambda\hspace{0.4em}h, \mathrm{cons}\hspace{0.4em}(f\hspace{0.4em}h)\big)\hspace{0.4em}\mathrm{nil}
+$$
+<!--endmath-->
+Try to understand why we have an inner $\lambda$ with only one argument by noting that $\mathrm{cons}\hspace{0.4em}(f\hspace{0.4em}h)$ is a function that maps a list to another prepended with $f\hspace{0.4em}$.
+
+Lastly, the flatmap function corresponds in Python, to the following list comprehension:
+```python
+l = ...  # list
+f = lambda x: ...  # list
+[y for x in l for y in f(x)]
+```
+Specifically, it takes a list and a function that maps to an element a list, it then concatenates the mapped lists.
+In a sense, it is the combination of a map and a flatten.
+
+The lambda calculus implementation is very similar to that of lMap, except that we can use append instead of cons to concatenate the lists:
+<!--math-->
+$$
+\mathrm{lFlatmap}=\lambda\hspace{0.4em}\ell\hspace{0.4em}f, \ell\hspace{0.4em}\big(\lambda\hspace{0.4em}h, \mathrm{append}\hspace{0.4em}(f\hspace{0.4em}h)\big)\hspace{0.4em}\mathrm{nil}
+$$
+<!--endmath-->
+
+By combining these three functions, we can build all list comprehension that are available in python.
+
+We will finish by implementing three functions to access elements of a list. The first one enables selecting the first (head) element of a list.
+Of course this element exists only if the list is non-empty, and therefore the right abstraction is for the output of this function to be an option.
+This means that we want a function that takes a list as input, and outputs none if the list is empty and some of the first value of the list otherwise.
+This can be done by iterating on the list, starting with the default value none. And then outputing the current value wrapped in some:
+<!--math-->
+$$
+\mathrm{head}=\lambda\hspace{0.4em}\ell, \ell\hspace{0.4em}(\lambda\hspace{0.4em}h\hspace{0.4em}v, \mathrm{some}\hspace{0.4em}h)\hspace{0.4em}\mathrm{none}
+$$
+<!--endmath-->
+
+The second function we will implement is slightly more involved: the tail function.
+It maps to a list, all elements except the first one, in Python, this would correspond to `l[-1:]`. Note that again, if the list is empty, we would run into trouble unless we make the output an option.
+This function is very similar to the pred function for integer in the sense that we need to iterate over the list and keep a current/previous term to be able to ignore the first element.
+This can be done similarly using pairs, when we iterate over the list:
+<!--math-->
+$$
+\begin{align*}
+\mathrm{tail}=\lambda~\ell, \mathrm{second}~\bigg( &\ell~\Big(\lambda~h~v,~\mathrm{pair}~\big(\mathrm{cons}~h~(\mathrm{first}~v)\big)~\big(\mathrm{some}~(\mathrm{first}~v)\big)\Big)~(\mathrm{pair}~\mathrm{nil}~\mathrm{none})\bigg)
+\end{align*}
+$$
+<!--endmath-->
+Try to translate the code in a python for loop to understand why it works, also try to name the two elements in the pair `current` and `previous` to make it clear what is happening here.
+Note that the first element of the pair at each iteration is always the concatenated list at the current iteration.
+Also note that the second element of the pair is either none, at the begining, or $\mathrm{some}\hspace{0.4em}\ell'$ where $\ell'$ is the constructed list at the previous iteration.
+
+We finish by implementing the at function that maps a list and an integer index to the option containing either the value at the provided index, if it exists, and otherwise none:
+It can be implemented easily by combining head, tail and flatmap appropriately:
+<!--math-->
+$$
+\mathrm{at}=\lambda~\ell~i, \mathrm{oFlatmap}~\big( i~(\lambda o, \mathrm{oFlatmap}~o~\mathrm{tail})~(\mathrm{some}~\ell) \big)~\mathrm{head}
+$$
+<!--endmath-->
+This essentially takes $i$ times the tail of the list, and then takes the head of the result, as each of those is an option, we use oFlatmap on the options.
