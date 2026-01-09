@@ -30,7 +30,7 @@ A relation $\leq$ is a **partial order** if it satisfies the three properties:
 
 ### The Variance of Functions
 
-When we want to consider functions as types, we encounter the notion of dependent types (types that depend on other types, like `list[int]`).
+When we want to consider functions as types, we encounter the notion of dependent types (types that depend on other types, like `list[int]` in Python).
 
 Suppose we have a function type defined by its input of type $T$ and its output of type $S$, we denote the type of this function as $T\to S$. In Python, this would be a `Callable[[T], S]`.
 
@@ -74,9 +74,9 @@ This itself isn't enough to say that the infimum and supremum of arbitrary (infi
 
 A lattice whose every subset has a supremum and an infiumum is called a complete lattice. Actually we only need one of the two: If a lattice satisfies that any subset has a supremum, then for any set $C$, we can take the supremum of the lower bounds of $C$, this is an infimum of $C$. The converse is also true.
 
-We showed that the lattice of types is complete. If we take the supremum of all types, we get the maximal type with respect to the subtyping relation $\preceq$. In order theory, we call this element the top element, and we denote it by $\top$. In Python, this is the type `Any`.
+We showed that the lattice of types is complete. If we take the supremum of all types, we get the maximal type with respect to the subtyping relation $\preceq$. In order theory, we call this element the top element, and we denote it by $\top$.
 
-Similarly, we can take the inifmum of all types, we get the bottom element $\bot$. In Python, this is called `Never`.
+Similarly, we can take the inifmum of all types, we get the bottom element $\bot$.
 
 > **Exercices:** Show that:
 > 1. If $T[S]$ is a covariant dependent type and $C$ a collection of types, then $\bigcup_{S\in C} T[S]=T\left[\bigcup_{S\in C} S\right]$ and $\bigcap_{S\in C} T[S]=T\left[\bigcap_{S\in C} S\right]$.
