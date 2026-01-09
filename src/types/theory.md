@@ -55,28 +55,27 @@ So the function type is contravariant in its input type, and covariant in its ou
 ### Type Systems as Lattices
 
 If we view types through the lens of order theory, the subtyping relation $\preceq$ organizes types into a complete lattice. A lattice is a partial order where every pair of elements have a least upper bound (called supremum) and a greatest lower bound (called infimum):
-1. Supremum: $a\lor b$ is the supremum of $a$ and $b$ if $a, b\leq a\lor b$, and any $c$ with $a, b\leq c$ satisfies $a\lor b\leq c$. In plain english $a\lor b$ is an upper bound of $a$ and $b$, and is smaller than any other upper bound.
-2. Infimum: $a\land b$ is the infimum of $a$ and $b$ if $a\lor b\leq a, b$, and any $c$ with $c\leq a, b$ satisfies $c\leq a\lor b$. In plain english $a\land b$ is a lower bound of $a$ and $b$, and is larger than any other lower bound.
+1. Supremum: $a\lor b$ is the supremum of $a$ and $b$ if $a\leq a\lor b$ and $b\leq a\lor b$, and any $c$ with $a\leq c$ and $b\leq c$ satisfies $a\lor b\leq c$. In plain english $a\lor b$ is an upper bound of $a$ and $b$, and is smaller than any other upper bound.
+2. Infimum: $a\land b$ is the infimum of $a$ and $b$ if $a\land b\leq a$ and $a\land b$, and any $c$ with $c\leq a$ and $c\leq b$ satisfies $c\leq a\land b$. In plain english $a\land b$ is a lower bound of $a$ and $b$, and is larger than any other lower bound.
 
 > **Exercises:** Show that
 > 1. The supremum of two types $T$ and $S$ is the union type $S\cup T$. An object of that type is either an object of type $S$ or an object of type $T$.
 > 2. The infimum of two types $T$ and $S$ is the intersection type $S\cap T$. An object of that type is of type $S$ and of type $T$ at the same time, it is also the largest type such that this is true.
 > 3. Are $S\cup T$ and $S\cap T$ covariant/contravariant in $S$ and in $T$?
-> 4. Prove that the operations of infimum and supremum are associattive: for any $a, b, c$, $a\lor(b\lor c)=(a\lor b)\lor c$ and $a\land (b\land c)=(a\land b)\land c$.
+> 4. Prove that the operations of infimum and supremum are associative: for any $a, b, c$, $a\lor(b\lor c)=(a\lor b)\lor c$ and $a\land (b\land c)=(a\land b)\land c$.
 
 Associativity is very important, it means that the least upper bound and greatest lower bound of three elements $a, b, c$ are unambiguous.
 More generally, in a lattice, we can take the supremum and infimum of a finite collection of elements.
 This itself isn't enough to say that the infimum and supremum of arbitrary (infinite) collections of types have a supremum and an infimum. Note that we do already have a way of building infinitely many types, as long as we have at least one type $T$ available, this is because we can have $T$, $T\to T$, $T\to T \to T$, ...
 
 > **Exercises:** Prove that 
-> 1. If we have an arbitrary collection $C$ of types, then the least upper bound of $C$ is $\bigcup_{T\in C} T$: an element of that type satisfies the existence of some $T$ in $C$ such that the element is that type.
+> 1. If we have an arbitrary collection $C$ of types, then the least upper bound of $C$ is $\bigcup_{T\in C} T$: an element of that type satisfies the existence of some $T$ in $C$ such that the element is of type $T$.
 > 2. If we have an arbitrary collection $C$ of types, then the greatest lower bound of $C$ is $\bigcap_{T\in C} T$: an element of that type is of type $T$ for all $T\in C$, furthermore, it is the largest type such that this is true.
 
 A lattice whose every subset has a supremum and an infiumum is called a complete lattice. Actually we only need one of the two: If a lattice satisfies that any subset has a supremum, then for any set $C$, we can take the supremum of the lower bounds of $C$, this is an infimum of $C$. The converse is also true.
 
-We showed that the lattice of types is complete. If we take the supremum of all types, we get the maximal type with respect to the subtyping relation $\preceq$. In order theory, we call this element the top element, and we denote it by $\top$.
-
-Similarly, we can take the inifmum of all types, we get the bottom element $\bot$.
+We showed that the lattice of types is complete. If we take the supremum of all types, we get the maximal type with respect to the subtyping relation $\preceq$. We call this element the top type, and we denote it by $\top$.
+Similarly, we can take the infimum of all types, we get the bottom type $\bot$.
 
 > **Exercices:** Show that:
 > 1. If $T[S]$ is a covariant dependent type and $C$ a collection of types, then $\bigcup_{S\in C} T[S]=T\left[\bigcup_{S\in C} S\right]$ and $\bigcap_{S\in C} T[S]=T\left[\bigcap_{S\in C} S\right]$.
