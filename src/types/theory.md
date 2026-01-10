@@ -1,3 +1,12 @@
+
+
+
+$T_1\to S_1 \preceq T_2\to S_2$
+
+
+
+
+
 # The Architecture of Roles: An Introduction to Typing
 
 In the previous module on Lambda Calculus, we established that the most important aspect of an object is its role: what it does within a system. As we transition toward Object-Oriented Programming and complex systems, we need a formal way to organize these roles. This is the essence of **typing**.
@@ -46,7 +55,7 @@ As an illustration, convince yourself that a function that outputs a `Dog` is a 
 
 This provides us with natural definition of Covariance and Contravariance of dependent types. Consider the dependent type $T[S]$ ($T$ depends on $S$), then:
 1. $T$ is covariant if $S_1\preceq S_2$ implies $T[S_1]\preceq T[S_2]$. In order theory, we call this a monotonic function.
-2. $T$ is contravariant if $S_1\preceq S_2$ implies $T[S_2] \preceq T[S_2]$. In order theory, we call this an antimonotonic function.
+2. $T$ is contravariant if $S_1\preceq S_2$ implies $T[S_2] \preceq T[S_1]$. In order theory, we call this an antimonotonic function.
 
 So the function type is contravariant in its input type, and covariant in its output type.
 
