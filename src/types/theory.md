@@ -1,12 +1,3 @@
-
-
-
-$T_1\to S_1 \preceq T_2\to S_2$
-
-
-
-
-
 # The Architecture of Roles: An Introduction to Typing
 
 In the previous module on Lambda Calculus, we established that the most important aspect of an object is its role: what it does within a system. As we transition toward Object-Oriented Programming and complex systems, we need a formal way to organize these roles. This is the essence of **typing**.
