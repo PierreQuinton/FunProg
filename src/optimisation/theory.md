@@ -5,7 +5,7 @@
 
 In traditional programming, we give the computer rules and data to get an answer. In Machine Learning (ML), we give the computer the data and the answers, and it figures out the rules.
 
-This shift allows us to solve problems that are too complex for manual rules,like recognizing a face in a photo or predicting the weather. In this course, we will follow the historical path of researchers: starting with simple math and building up to systems that can "learn" patterns.
+This shift allows us to solve problems that are too complex for manual rules, like recognizing a face in a photo or predicting the weather. In this course, we will follow the historical path of researchers: starting with simple math and building up to systems that can learn patterns.
 
 ### Warm-up Exercise: Finding the Minima
 
@@ -93,7 +93,7 @@ How do they compare? Play with the learning rate $\lambda$ by setting it to very
 
 Before we continue, let's name the parts of the machine we are building. In research papers, you will see these terms constantly:
 - Input: The raw data we give to the machine (in our case, the $x$-coordinates).
-- Target: The "ground truth" or the correct answer we want the machine to learn for the corresponding inputs.
+- Target: The ground truth or the correct answer we want the machine to learn for the corresponding inputs.
 - Model: The mathematical structure we choose (e.g., a degree $2$ polynomial). It’s like a box with knobs we can turn.
 - Parameters: The specific values of those knobs (our $a$, $b$, $c$).
 - Output or prediction: The model's current guess based on the input and parameters.
