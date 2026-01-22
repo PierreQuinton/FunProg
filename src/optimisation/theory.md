@@ -1,4 +1,3 @@
-
 # From optimization to auto-differentiation
 
 ### Motivation: Machine Learning
@@ -113,3 +112,5 @@ Try running several times the fit, what do you observe?
 
 Generalize your loss such that it accepts more data points (pairs of input/output). Try augmenting the number of sampled points you train on (the noise should be independent).
 What do you observe?
+
+Generalize your model such that it can be any degree `n` polynomial, and where you can parametrize `n`. Try augmenting the degree of the model. What do you observe?
