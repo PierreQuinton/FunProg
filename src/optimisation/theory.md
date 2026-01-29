@@ -72,7 +72,7 @@ $$
 
 Applying such a step iteratively (or a small modification of it actually) is how most AI is trained today.
 
-### Lab 1: Fitting a Curve
+### Fitting a Curve
 
 The Goal: Find the coefficients $a$, $b$, and $c$ for a parabola $y=ax^2+bx+c$ that passes through three specific points.
 
@@ -114,3 +114,126 @@ Generalize your loss such that it accepts more data points (pairs of input/outpu
 What do you observe?
 
 Generalize your model such that it can be any degree `n` polynomial, and where you can parametrize `n`. Try augmenting the degree of the model. What do you observe?
+
+---
+
+# Auto-Differentiation: The Chain of Command
+
+### The Problem with Manual Calculus
+
+In the first part of the lab, you computed the gradient $\nabla f(a, b, c)$ by looking at the function as one big block. It worked, but it was tedious. If we decided to change our model from a parabola to a neural network, we would have to start our math from scratch. Worse than that, there is almost no chance we would get the derivative correct if differentiate by hand some very complicated model.
+
+To fix this, we need to realize that our objective function is not one big blob, but a **composition** of simple steps. And the derivative of such an object can be obtained easily.
+
+### Deconstructing the Loss Function
+
+Let's look at the construction we built for our parabola fitting. We can break it down into three distinct stages:
+
+1.  **The model ($f$):** We take our parameters $\theta$ and generate a vector of predictions.
+<!--math-->
+$$
+\begin{align*}
+f(x, \theta) = \begin{bmatrix} \theta_k x_1^k + \cdots + \theta_1 x_1 + \theta_0 \\ \vdots \\ \theta_k x_n^k + \cdots + \theta_1 x_n + \theta_0 \end{bmatrix} = \hat{\mathbf{y}} \in \mathbb{R}^n
+\end{align*}
+$$
+<!--endmath-->
+1.  **The error ($g$):** We compare these predictions to our targets $y_i$ by calculating the squared difference for each point.
+<!--math-->
+$$
+\begin{align*}
+g(\hat{\mathbf{y}}) = \begin{bmatrix} (y_1 - \hat{y}_1)^2 \\ \vdots \\ (y_n - \hat{y}_n)^2 \end{bmatrix} = \mathbf{e} \in \mathbb{R}^n
+\end{align*}
+$$
+<!--endmath-->
+1.  **The averrage ($h$):** We condense those individual errors into a single "loss" value (the Mean).
+<!--math-->
+$$
+\begin{align*}
+h(\mathbf{e}) = \frac{1}{n} \sum_{i=1}^n e_i = \mathcal{L} \in \mathbb{R}
+\end{align*}
+$$
+<!--endmath-->
+The entire training process is just finding the derivative of the composition: $\mathcal{L}(\theta) = (h \circ g \circ f)(\theta)$.
+
+
+### The Chain Rule
+
+In one dimension, if you have two functions $h$ and $g$, the derivative of their composition is:
+<!--math-->
+$$
+\begin{align*}
+(h \circ g)'(x) = g'(x) \cdot h'\big(g(x)\big)
+\end{align*}
+$$
+<!--endmath-->
+In Machine Learning, we deal with vectors. The derivative becomes a matrix (the Jacobian), and the multiplication is matrix multiplication. We call this the **Vector-Jacobian Product (VJP)**.
+
+For the loss $L(\theta)$ defined above, this yields the following chain rule:
+<!--math-->
+$$
+\begin{align*}
+\underbrace{\frac{\partial \mathcal{L}}{\partial \theta}}_{1 \times k} = \underbrace{\frac{\partial \mathcal{L}}{\partial \mathbf{e}}}_{1 \times n} \cdot \underbrace{\frac{\partial \mathbf{e}}{\partial \hat{\mathbf{y}}}}_{n \times n} \cdot \underbrace{\frac{\partial \hat{\mathbf{y}}}{\partial \theta}}_{n \times k}
+\end{align*}
+$$
+<!--endmath-->
+
+
+### The Vector-Jacobian Product (VJP)
+
+Notice the order of operations. We start with a row vector (the gradient of the output) and multiply it by a matrix (the Jacobian of the local step).
+
+This is the main ingredient of auto-differentiation. We don't actually need to compute the full, giant Jacobian matrices (which could be billions of entries in a real model). We only need to know how to multiply a vector by that matrix.
+
+Each step is a simple propagation of the gradient. This is why we call the main algorithm for propagation of the gradient the backpropagation algorithm.
+
+## Scaling Up: Autodiff in the Real World
+
+In the libraries **PyTorch**, **JAX**, or **TensorFlow**, are provided tools for applying such rules in order to formally compute the derivative of any computations. When you write mathematical operations in these libraries, they don't just calculate the answer; they also build a graph of every operation you performed. When you call for the gradient, they travel accross this graph backward, applying the Chain Rule (VJP) at every step.
+
+The only difference is that these libraries are written in optimized C++ and CUDA, allowing them to handle billions of parameters across many of GPUs simultaneously.
+
+---
+
+### Porting to PyTorch
+
+It is time to throw away our manual derivative functions and let the engine do the heavy lifting. We will now port our parabola-fitting experiment to **PyTorch**.
+
+#### Setup
+If you haven't already, install PyTorch in your environment:
+```bash
+pip install torch
+```
+
+#### From Arrays to Tensors
+
+In PyTorch, we don't use `numpy.array`; we use `torch.Tensor`. They behave similarly, but `Tensor`s have the special ability to track their own gradients.
+You can create those for isntance with
+```python
+import torch
+
+x_train = torch.tensor([1.0, 2.0, 3.0])
+y_train = torch.tensor([2.0, 8.0, 18.0])
+```
+
+#### Parameters and `requires_grad`
+
+To tell PyTorch which variables we want to optimize, we must set the flag `requires_grad` to `True`. This tells the engine: Keep track of every operation involving this variable so I can compute its gradient later.
+```python
+theta = torch.randn(3, requires_grad=True)
+```
+
+#### The Optimizer
+
+Instead of manually updating our parameters with `theta -= lambda * grad`, we use an optimizer. It handles the update logic for us. The simplest one is `SGD` (Stochastic Gradient Descent):
+
+```python
+optimizer = torch.optim.SGD([theta], lr=0.01)
+```
+
+#### The Task: The Modern Training Loop
+
+Rewrite your previous lab code using PyTorch. Your loop should follow this standard learning pattern:
+1. Zero the gradients: PyTorch accumulates (adds) gradients by default. You must clear the old ones at the start of every loop: `optimizer.zero_grad()`
+2. Forward Pass: Write the math normally. PyTorch builds the graph automatically: `preds = theta[0]*x**0 + \theta[1]*x**1 + ...`,  `loss = torch.mean((preds - y_train)**2)`
+3. Backward Pass: This is the magic line. It triggers the VJP chain described above: `loss.backward()`
+4. The Step: The optimizer nudges the parameters in the direction of the gradient: `optimizer.step()`
