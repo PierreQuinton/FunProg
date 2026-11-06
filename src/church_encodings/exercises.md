@@ -9,6 +9,7 @@ In order to get a feeling of the power of functional programming, we will define
 - Booleans
 - Pairs (Couples)
 - Integers
+- Options
 - Lists
 
 But anything else would in theory be doable. For reference, the theory is available in the file `theory.md`.
@@ -39,9 +40,8 @@ functions:
 - `from_bool` that takes as an input a Python Boolean and returns a Boolean of our framework.
 - `to_bool` that takes as an input one of our Boolean and returns `True` or `False`.
 
-If you want to test if your solutions, you can run pytest on the file `tests/church_encodings/test_bool.py` using your
-IDE. You can also test your implementation of equivalence by running pytest on the file
-`tests/church_encodings/test_equivalences.py`, only the test `test_bool` should pass.
+If you want to test your solutions, you can run `python run_tests.py`. You want the line `bool` to be `OK`. You can also
+look at the line `equivalences`, in which only the test `test_bool` should pass at this point.
 
 ## Pairs
 
@@ -56,8 +56,8 @@ bijection between the two. Go to the file `src/church_encodings/equivalences.py`
 - `from_pair` that takes as an input a Python tuple made of two elements and returns a pair of our framework.
 - `to_pair` that takes as an input one of our pair and returns a tuple with two elements.
 
-If you want to test if your solutions, you can run pytest on the file `tests/church_encodings/test_pairs.py` and
-`tests/church_encodings/test_equivalences.py` (in which you want `test_pair` to pass) using your IDE.
+If you want to test your solutions, you can run `python run_tests.py`. You want the line `pair` to be `OK`, as well as
+the test `test_pair` of the line `equivalences`.
 
 ## Integers
 
@@ -73,3 +73,65 @@ replacing the `...` by appropriate lambda expressions. You are expected to imple
 - `i_leq`
 - `i_lt`
 - `i_eq`
+
+The constants from `i_one` to `i_ten` are already provided, they are defined in terms of `i_zero` and `i_succ`, so you
+should start by implementing those two.
+
+Again, in order to convince ourselves that our integers are equivalent to the ones provided by Python, we need to show
+that there is a bijection between the two. Go to the file `src/church_encodings/equivalences.py` and fill in the two
+functions:
+- `from_int` that takes as an input a Python integer and returns an Integer of our framework.
+- `to_int` that takes as an input one of our Integer and returns the corresponding Python integer.
+
+If you want to test your solutions, you can run `python run_tests.py`. You want the line `int` to be `OK`, as well as
+the test `test_int` of the line `equivalences`.
+
+## Options
+
+We will now define options. An option is a container that is either empty or contains exactly one value, this is our way
+of handling the absence of a value, where Python would use `None`. Go to the file `src/church_encodings/option.py` and
+replace the `...` by appropriate lambda expressions. You are expected to implement the lambdas:
+- `o_none`
+- `o_some`
+- `o_is_none`
+- `o_is_some`
+- `o_get_or_else`
+- `o_map`
+- `o_flatmap`
+
+Again, in order to convince ourselves that our options are equivalent to what Python does with `None`, we need to show
+that there is a bijection between the two. Go to the file `src/church_encodings/equivalences.py` and fill in the two
+functions:
+- `from_option` that takes as an input a Python value that may be `None` and returns an Option of our framework.
+- `to_option` that takes as an input one of our Option and returns the value it contains, or `None` if it is empty.
+
+If you want to test your solutions, you can run `python run_tests.py`. You want the line `option` to be `OK`.
+
+## Lists
+
+Finally, we will define lists, the most versatile structure of this lab. Go to the file `src/church_encodings/list.py`
+and replace the `...` by appropriate lambda expressions. You are expected to implement the lambdas:
+- `l_nil`
+- `l_cons`
+- `l_append`
+- `l_length`
+- `l_is_nil`
+- `l_is_non_empty`
+- `l_filter`
+- `l_map`
+- `l_flatmap`
+- `l_head`
+- `l_tail`
+- `l_at`
+
+The last three functions output options since the requested element may not exist. Note that `l_tail` and `l_at` are
+the hardest functions of this lab, you will probably need to read the theory of lists before implementing them.
+
+Again, in order to convince ourselves that our lists are equivalent to the ones provided by Python, we need to show
+that there is a bijection between the two. Go to the file `src/church_encodings/equivalences.py` and fill in the two
+functions:
+- `from_list` that takes as an input a Python list and returns a List of our framework.
+- `to_list` that takes as an input one of our List and returns the corresponding Python list.
+
+If you want to test your solutions, you can run `python run_tests.py`. You want the line `lists` to be `OK`, as well as
+the test `test_list` of the line `equivalences`.
