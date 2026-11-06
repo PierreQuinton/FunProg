@@ -202,6 +202,47 @@ def _raising_module(exc: BaseException) -> str | None:
     return tb.tb_frame.f_globals.get("__name__")
 
 
+def _module_dependencies(path: Path) -> set[str]:
+    """The modules of the package that the file at `path` imports from."""
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+    except (OSError, SyntaxError, ValueError):
+        return set()
+    deps: set[str] = set()
+    prefix = PACKAGE + "."
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom) and node.module and node.module.startswith(prefix):
+            deps.add(node.module[len(prefix):].split(".")[0])
+        elif isinstance(node, ast.Import):
+            for alias in node.names:
+                if alias.name.startswith(prefix):
+                    deps.add(alias.name[len(prefix):].split(".")[0])
+    return deps
+
+
+def _dependency_order(deps: dict[str, set[str]]) -> list[str]:
+    """Order module names so that dependencies are imported first.
+
+    This way a module always binds the patched (or stubbed) version of every
+    `...` item it imports, which keeps the "missing: <name>" messages precise.
+    Ties and dependency cycles are broken alphabetically.
+    """
+    order: list[str] = []
+    remaining = dict(deps)
+    while remaining:
+        ready = sorted(
+            name
+            for name, needs in remaining.items()
+            if not needs & (set(remaining) - {name})
+        )
+        if not ready:  # dependency cycle: break it alphabetically
+            ready = [min(remaining)]
+        for name in ready:
+            order.append(name)
+            del remaining[name]
+    return order
+
+
 def load_source_modules() -> dict[str, str]:
     """Import every module of the package, patching or stubbing `...` items.
 
@@ -213,7 +254,8 @@ def load_source_modules() -> dict[str, str]:
     """
     states: dict[str, str] = {}
     files = sorted(p for p in PKG_DIR.glob("*.py") if p.name != "__init__.py")
-    pending = [p.stem for p in files]
+    deps = {p.stem: _module_dependencies(p) for p in files}
+    pending = _dependency_order(deps)
     while pending:
         progress = False
         still: list[str] = []
