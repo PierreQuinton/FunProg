@@ -13,6 +13,16 @@ In order to get a feeling of the power of functional programming, we will define
 
 But anything else would in theory be doable. For reference, the theory is available in the file `theory.md`.
 
+## Testing your code
+
+At any point, you can check your progress by running, from the root of the repository:
+
+```
+python run_tests.py
+```
+
+This does not require anything to be installed besides Python. For each group of exercises, it tells you whether the tests pass (`OK`), whether some of them fail because your result is wrong (`FAIL`), or whether they hit something you have not implemented yet (`TODO`). Add the flag `-v` to see one line per test.
+
 ## Booleans
 
 We will start by defining booleans. Go to the file `src/church_encodings/bool.py` and start by replacing the `...` by
